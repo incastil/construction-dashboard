@@ -1,5 +1,7 @@
 # ConstructIQ — Construction Analytics Dashboard
 
+**Live demo:** https://construction-dashboard-dusky.vercel.app
+
 A portfolio project demonstrating how AI and data analysis skills can turn raw construction project data into actionable operational intelligence — the kind of capability that extends Procore's value without replacing it.
 
 ---
