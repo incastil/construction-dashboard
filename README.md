@@ -1,67 +1,57 @@
 # ConstructIQ — Construction Analytics Dashboard
 
-> Built as a direct response to a real business conversation:
-> *"AI plus analysis skills would set you apart. General Construction companies use Procore — maximizing this database would be of great value. I could see you taking the company needs to make us more efficient through IT systems."*
-
-This project is a working proof of concept — not a tutorial, not a template. It demonstrates what it looks like when someone with IT, data analysis, and AI skills looks at a construction company's operational pain points and builds a solution in response.
+A portfolio project demonstrating how AI and data analysis skills can turn raw construction project data into actionable operational intelligence — the kind of capability that extends Procore's value without replacing it.
 
 ---
 
-## The Business Problem
+## The Problem
 
-Companies that use **Procore** accumulate a rich dataset: project timelines, budgets, change orders, subcontractor performance, safety records, and task completion rates. Most of that data sits in Procore dashboards that show *what happened* — not *what's about to go wrong*.
+Construction companies using **Procore** accumulate rich data: project timelines, budgets, change orders, subcontractor performance, safety records, task completion rates. Most of that data surfaces in dashboards that show *what happened* — not *what is about to go wrong*.
 
-Project managers are often reacting to problems rather than preventing them. A project that's 3 days late and 5% over budget today becomes a 3-week delay and a $400K overrun by close — if nobody flags the trend early.
-
-This dashboard addresses that gap.
+Project managers end up reacting to problems rather than preventing them. A project that is 3 days late and 5% over budget today can become a 3-week delay and a $400K overrun by close — if no one flags the trend early enough.
 
 ---
 
 ## What This Demonstrates
 
-### 1. AI-Augmented Analysis (Rule Engine)
-A lightweight rule-based engine (`src/lib/analytics.ts`) mirrors the kind of logic a VP of IT would want embedded in any Procore integration or replacement system:
+### Rule-Based AI Risk Engine
+The analytics engine (`src/lib/analytics.ts`) mirrors the logic you would want embedded in a Procore integration or any construction ops platform:
 
 - Projects are automatically classified: **On Time → At Risk → High Risk → Critical**
 - A **risk score (0–100)** is computed from three weighted signals:
-  - Schedule delay (max 50 pts)
-  - Budget overrun (max 30 pts)
-  - Delayed task count (max 20 pts)
-- Alerts are auto-generated and severity-ranked
-- Insights are synthesized across the portfolio (e.g., "Change orders are the primary cost driver for 2 critical projects")
+  - Schedule delay — up to 50 pts
+  - Budget overrun — up to 30 pts
+  - Delayed task count — up to 20 pts
+- Alerts are auto-generated and severity-ranked across the full portfolio
+- Insights are synthesized at the portfolio level (e.g., identifying that change orders are the primary cost driver across multiple at-risk projects)
 
-This is the pattern for how AI adds value in construction ops — not replacing Procore, but sitting on top of it to surface what the raw data obscures.
+### Portfolio-Level Visibility
 
-### 2. Data Ingestion & Flexibility
-The **Data Upload** page accepts CSV exports (the format Procore and most ERP systems support). Drop in a file, and the entire dashboard — KPIs, charts, alerts, insights — rebuilds from the new data. This is how a real integration starts: pull from the source system, normalize, analyze.
-
-### 3. Portfolio-Level Visibility
-Eight mock projects spanning Commercial, Residential, Infrastructure, Industrial, and Public sectors show what a multi-project portfolio view looks like — the kind of view a VP of IT or COO needs, not individual PMs.
-
-| Metric | What It Shows |
+| Metric | Purpose |
 |---|---|
-| On-Time Delivery % | Schedule health at a glance |
-| Portfolio Budget vs Actual | Total cost exposure |
-| Average Risk Score | Where to focus attention first |
+| On-Time Delivery % | Schedule health across all projects |
+| Portfolio Budget vs Actual | Total cost exposure at a glance |
+| Average Risk Score | Where to direct attention first |
 | Active Alerts | What needs action today |
 
+### Data Ingestion
+The **Data Upload** page accepts CSV — the export format Procore and most ERP systems support. Drop in a file and the entire dashboard rebuilds: KPIs, charts, alerts, and insights all update from the new dataset. This is the foundation for a real integration: pull from the source system, normalize, analyze.
+
 ---
 
-## The Broader Vision
+## The Broader Pattern
 
-The same pattern applied here to **Procore / Construction** extends directly to the other pain points mentioned:
+The same architecture applied here to construction data generalizes directly to other operational domains:
 
-| Department | Current Tool | Analytics Opportunity |
+| Domain | Data Source | Analytics Value |
 |---|---|---|
 | Construction | Procore | Schedule risk, cost forecasting, subcontractor performance |
-| Human Resources | ATS / HRIS | Turnover prediction, hiring funnel analysis, headcount planning |
-| Logistics | ERP / TMS | Delivery delay patterns, vendor risk scoring, route optimization signals |
-
-The underlying approach is the same: connect to the system of record, extract the signal from the noise, surface it in a form that drives decisions rather than just reports history.
+| Human Resources | HRIS / ATS | Turnover signals, hiring funnel health, headcount planning |
+| Logistics | ERP / TMS | Delivery delay patterns, vendor risk scoring |
 
 ---
 
-## Technical Stack
+## Stack
 
 | Layer | Technology |
 |---|---|
@@ -69,9 +59,8 @@ The underlying approach is the same: connect to the system of record, extract th
 | Styling | Tailwind CSS v4 |
 | Charts | Recharts |
 | Build | Vite + Bun |
-| AI Engine | Rule-based (extensible to LLM) |
 
-No backend required. Designed to be deployed as a static app and connected to any REST API or CSV export from Procore, SAP, Workday, or a custom system.
+No backend required. Deployable as a static app and connectable to any REST API or CSV export from Procore, SAP, Workday, or a custom system.
 
 ---
 
@@ -96,27 +85,23 @@ Open `http://localhost:5173`
 ```
 src/
 ├── lib/
-│   ├── analytics.ts      # Rule engine: risk scoring, alerts, insights
+│   ├── analytics.ts      # Risk scoring, alert generation, portfolio insights
 │   └── formatters.ts     # Currency, percent, date helpers
 ├── data/
 │   └── mockProjects.ts   # 8 realistic Procore-style projects
 ├── hooks/
-│   ├── useProjects.ts    # Central data, filter, sort state
-│   └── useTheme.ts       # Dark mode (persisted)
+│   ├── useProjects.ts    # Central data, filter, and sort state
+│   └── useTheme.ts       # Dark mode with localStorage persistence
 ├── components/           # Cards, charts, table, alerts, insights
 └── pages/                # Dashboard, Projects, Analytics, Upload, Settings
 ```
 
 ---
 
-## What's Next (If This Were Production)
+## Roadmap
 
-1. **Procore API integration** — OAuth + REST to pull live project, budget, and RFI data
-2. **LLM layer** — Replace the rule engine with a model that can reason over unstructured notes, RFIs, and change order descriptions
-3. **HR module** — Same architecture applied to headcount and turnover data
-4. **Logistics module** — Delivery performance and vendor risk scoring
-5. **Role-based views** — PM sees their projects; COO sees the portfolio; VP IT sees system health
-
----
-
-*Built by Ivan Castillo — demonstrating that the gap between "we have data in Procore" and "we make better decisions because of it" is a solvable engineering and analysis problem.*
+- **Procore API integration** — OAuth + REST to pull live project, budget, and RFI data
+- **LLM layer** — Reason over unstructured change order descriptions and RFI notes
+- **HR module** — Same architecture applied to headcount and attrition data
+- **Logistics module** — Delivery performance and vendor risk scoring
+- **Role-based views** — PM sees their projects; leadership sees the portfolio
