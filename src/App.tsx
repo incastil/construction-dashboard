@@ -9,15 +9,17 @@ import { Projects } from './pages/Projects';
 import { Analytics } from './pages/Analytics';
 import { DataUpload } from './pages/DataUpload';
 import { Settings } from './pages/Settings';
-import { HardHat, X, LayoutDashboard, FolderKanban, BarChart3, Upload, Settings as SettingsIcon } from 'lucide-react';
+import { PredictiveRisks } from './pages/PredictiveRisks';
+import { HardHat, X, LayoutDashboard, FolderKanban, BarChart3, Upload, Settings as SettingsIcon, ShieldAlert } from 'lucide-react';
 import { clsx } from 'clsx';
 
-type Page = 'dashboard' | 'projects' | 'analytics' | 'upload' | 'settings';
+type Page = 'dashboard' | 'projects' | 'analytics' | 'predictive-risks' | 'upload' | 'settings';
 
 const mobileNavItems = [
   { label: 'Dashboard', icon: <LayoutDashboard size={20} />, page: 'dashboard' as Page },
   { label: 'Projects', icon: <FolderKanban size={20} />, page: 'projects' as Page },
   { label: 'Analytics', icon: <BarChart3 size={20} />, page: 'analytics' as Page },
+  { label: 'Pred. Risks', icon: <ShieldAlert size={20} />, page: 'predictive-risks' as Page },
   { label: 'Upload', icon: <Upload size={20} />, page: 'upload' as Page },
   { label: 'Settings', icon: <SettingsIcon size={20} />, page: 'settings' as Page },
 ];
@@ -97,6 +99,7 @@ export default function App() {
           {currentPage === 'dashboard' && <Dashboard data={projectsData} />}
           {currentPage === 'projects' && <Projects data={projectsData} />}
           {currentPage === 'analytics' && <Analytics data={projectsData} />}
+          {currentPage === 'predictive-risks' && <PredictiveRisks data={projectsData} />}
           {currentPage === 'upload' && <DataUpload data={projectsData} />}
           {currentPage === 'settings' && <Settings theme={theme} onToggleTheme={toggleTheme} data={projectsData} />}
         </PageShell>

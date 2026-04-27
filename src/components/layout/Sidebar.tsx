@@ -1,4 +1,4 @@
-import { LayoutDashboard, FolderKanban, BarChart3, Upload, Settings, HardHat } from 'lucide-react';
+import { LayoutDashboard, FolderKanban, BarChart3, Upload, Settings, HardHat, ShieldAlert } from 'lucide-react';
 import { clsx } from 'clsx';
 
 interface NavItem {
@@ -11,6 +11,7 @@ const navItems: NavItem[] = [
   { label: 'Dashboard', icon: <LayoutDashboard size={20} />, page: 'dashboard' },
   { label: 'Projects', icon: <FolderKanban size={20} />, page: 'projects' },
   { label: 'Analytics', icon: <BarChart3 size={20} />, page: 'analytics' },
+  { label: 'Predictive Risks', icon: <ShieldAlert size={20} />, page: 'predictive-risks' },
   { label: 'Data Upload', icon: <Upload size={20} />, page: 'upload' },
   { label: 'Settings', icon: <Settings size={20} />, page: 'settings' },
 ];
