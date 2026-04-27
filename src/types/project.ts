@@ -66,6 +66,14 @@ export interface KPISummary {
   criticalProjects: number;
 }
 
+export type PredictiveRiskLevel = 'Low' | 'Medium' | 'High';
+
+export interface PredictiveRisk {
+  score: number;
+  level: PredictiveRiskLevel;
+  reasons: string[];
+}
+
 export type SortField = 'name' | 'budget' | 'actualCost' | 'daysLate' | 'riskScore' | 'completionPercent';
 export type SortDirection = 'asc' | 'desc';
 

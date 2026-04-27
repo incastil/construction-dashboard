@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { mockProjects } from '../data/mockProjects';
-import type { Project, FilterState } from '../types/project';
-import { generateAlerts, generateInsights, computeKPIs } from '../lib/analytics';
+import type { Project, FilterState, PredictiveRisk } from '../types/project';
+import { generateAlerts, generateInsights, computeKPIs, computePredictiveRisk } from '../lib/analytics';
 
 export function useProjects() {
   const [projects, setProjects] = useState<Project[]>(mockProjects);
@@ -50,6 +50,14 @@ export function useProjects() {
   const insights = useMemo(() => generateInsights(projects), [projects]);
   const kpis = useMemo(() => computeKPIs(projects), [projects]);
 
+  const predictiveRisks = useMemo(() => {
+    const map: Record<string, PredictiveRisk> = {};
+    for (const p of projects) {
+      map[p.id] = computePredictiveRisk(p);
+    }
+    return map;
+  }, [projects]);
+
   const updateFilters = (partial: Partial<FilterState>) => {
     setFilters(f => ({ ...f, ...partial }));
   };
@@ -65,6 +73,7 @@ export function useProjects() {
     alerts,
     insights,
     kpis,
+    predictiveRisks,
     resetData,
   };
 }

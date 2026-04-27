@@ -1,4 +1,4 @@
-import type { Project, FilterState } from '../../types/project';
+import type { Project, FilterState, PredictiveRisk } from '../../types/project';
 import { TableRow } from './TableRow';
 import { TableFilters } from './TableFilters';
 import { FolderKanban } from 'lucide-react';
@@ -8,6 +8,7 @@ interface ProjectTableProps {
   allProjects: Project[];
   filters: FilterState;
   onFiltersChange: (partial: Partial<FilterState>) => void;
+  predictiveRisks: Record<string, PredictiveRisk>;
 }
 
 const headers = [
@@ -19,9 +20,10 @@ const headers = [
   { label: 'Delay', width: 'w-20' },
   { label: 'Progress', width: 'w-32' },
   { label: 'Risk', width: 'w-28' },
+  { label: 'Pred. Risk', width: 'w-24' },
 ];
 
-export function ProjectTable({ projects, allProjects, filters, onFiltersChange }: ProjectTableProps) {
+export function ProjectTable({ projects, allProjects, filters, onFiltersChange, predictiveRisks }: ProjectTableProps) {
   return (
     <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm overflow-hidden">
       {/* Filters */}
@@ -52,14 +54,14 @@ export function ProjectTable({ projects, allProjects, filters, onFiltersChange }
           <tbody>
             {projects.length === 0 ? (
               <tr>
-                <td colSpan={8} className="px-4 py-12 text-center">
+                <td colSpan={9} className="px-4 py-12 text-center">
                   <FolderKanban size={32} className="text-slate-300 dark:text-slate-600 mx-auto mb-2" />
                   <p className="text-sm text-slate-500 dark:text-slate-400">No projects match your filters</p>
                 </td>
               </tr>
             ) : (
               projects.map((project, i) => (
-                <TableRow key={project.id} project={project} index={i} />
+                <TableRow key={project.id} project={project} index={i} predictiveRisk={predictiveRisks[project.id]} />
               ))
             )}
           </tbody>

@@ -1,16 +1,19 @@
 import { SummaryCard } from './SummaryCard';
-import type { KPISummary } from '../../types/project';
+import type { KPISummary, PredictiveRisk } from '../../types/project';
 import { formatCurrency, formatPercent } from '../../lib/formatters';
-import { FolderKanban, Clock, TrendingUp, AlertTriangle } from 'lucide-react';
+import { FolderKanban, Clock, TrendingUp, ShieldAlert } from 'lucide-react';
 
 interface SummaryCardRowProps {
   kpis: KPISummary;
+  predictiveRisks: Record<string, PredictiveRisk>;
 }
 
-export function SummaryCardRow({ kpis }: SummaryCardRowProps) {
+export function SummaryCardRow({ kpis, predictiveRisks }: SummaryCardRowProps) {
   const onTimePct = (kpis.onTimeProjects / kpis.totalProjects) * 100;
   const budgetVariancePct = ((kpis.totalActualCost - kpis.totalBudget) / kpis.totalBudget) * 100;
   const isOverBudget = kpis.totalActualCost > kpis.totalBudget;
+  const highRiskCount = Object.values(predictiveRisks).filter(r => r.level === 'High').length;
+  const medRiskCount = Object.values(predictiveRisks).filter(r => r.level === 'Medium').length;
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
@@ -46,14 +49,14 @@ export function SummaryCardRow({ kpis }: SummaryCardRowProps) {
         }}
       />
       <SummaryCard
-        title="Avg Risk Score"
-        value={`${kpis.avgRiskScore}/100`}
-        subtitle={`${kpis.overBudgetProjects} over budget`}
-        icon={<AlertTriangle size={22} />}
-        color={kpis.avgRiskScore > 60 ? 'red' : kpis.avgRiskScore > 30 ? 'amber' : 'green'}
+        title="Predictive Risk"
+        value={`${highRiskCount} High`}
+        subtitle={`${medRiskCount} medium · ${kpis.totalProjects - highRiskCount - medRiskCount} low`}
+        icon={<ShieldAlert size={22} />}
+        color={highRiskCount > 0 ? 'red' : medRiskCount > 0 ? 'amber' : 'green'}
         trend={{
-          value: kpis.avgRiskScore > 50 ? 'High portfolio risk' : 'Manageable risk',
-          positive: kpis.avgRiskScore <= 50,
+          value: highRiskCount > 0 ? `${highRiskCount} need attention` : 'Portfolio stable',
+          positive: highRiskCount === 0,
         }}
       />
     </div>

@@ -8,7 +8,7 @@ interface ProjectsPageProps {
 }
 
 export function Projects({ data }: ProjectsPageProps) {
-  const { projects, filteredProjects, filters, updateFilters } = data;
+  const { projects, filteredProjects, filters, updateFilters, predictiveRisks } = data;
 
   return (
     <div className="space-y-4">
@@ -23,6 +23,7 @@ export function Projects({ data }: ProjectsPageProps) {
         allProjects={projects}
         filters={filters}
         onFiltersChange={updateFilters}
+        predictiveRisks={predictiveRisks}
       />
     </div>
   );

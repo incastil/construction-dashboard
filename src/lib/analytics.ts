@@ -1,4 +1,4 @@
-import type { Project, ProjectStatus, Alert, Insight, KPISummary } from '../types/project';
+import type { Project, ProjectStatus, Alert, Insight, KPISummary, PredictiveRisk, PredictiveRiskLevel } from '../types/project';
 
 /** Classify project status from daysLate */
 export function classifyStatus(daysLate: number, budget: number, actualCost: number): ProjectStatus {
@@ -39,6 +39,35 @@ export function computeRiskScore(project: Project): number {
   }
 
   return Math.round(Math.min(100, score));
+}
+
+/** Predictive risk score: 0–2 Low, 3–5 Medium, 6+ High */
+export function computePredictiveRisk(project: Project): PredictiveRisk {
+  let score = 0;
+  const reasons: string[] = [];
+
+  if (project.daysLate > 3) {
+    score += 2;
+    reasons.push(`${project.daysLate} days behind schedule`);
+  }
+  if (project.daysLate > 7) {
+    score += 3;
+  }
+
+  if (project.actualCost > project.budget) {
+    score += 3;
+    const overPct = ((project.actualCost - project.budget) / project.budget * 100).toFixed(1);
+    reasons.push(`${overPct}% over budget`);
+  }
+
+  const delayedTasks = project.tasks.filter(t => t.status === 'Delayed').length;
+  if (delayedTasks > 2) {
+    score += 2;
+    reasons.push(`${delayedTasks} delayed tasks`);
+  }
+
+  const level: PredictiveRiskLevel = score >= 6 ? 'High' : score >= 3 ? 'Medium' : 'Low';
+  return { score, level, reasons: reasons.length > 0 ? reasons : ['Stable performance'] };
 }
 
 /** Generate alerts for a list of projects */

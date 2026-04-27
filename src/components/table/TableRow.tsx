@@ -1,4 +1,4 @@
-import type { Project } from '../../types/project';
+import type { Project, PredictiveRisk } from '../../types/project';
 import { StatusBadge } from './StatusBadge';
 import { formatCurrency, formatPercent, isOverBudget } from '../../lib/formatters';
 import { clsx } from 'clsx';
@@ -6,7 +6,14 @@ import { clsx } from 'clsx';
 interface TableRowProps {
   project: Project;
   index: number;
+  predictiveRisk: PredictiveRisk;
 }
+
+const predLevelStyles: Record<string, string> = {
+  High:   'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400',
+  Medium: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400',
+  Low:    'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400',
+};
 
 function RiskBar({ score }: { score: number }) {
   const color =
@@ -24,7 +31,7 @@ function RiskBar({ score }: { score: number }) {
   );
 }
 
-export function TableRow({ project, index }: TableRowProps) {
+export function TableRow({ project, index, predictiveRisk }: TableRowProps) {
   const overBudget = isOverBudget(project.budget, project.actualCost);
   const budgetVariancePct = ((project.actualCost - project.budget) / project.budget * 100).toFixed(1);
 
@@ -89,6 +96,22 @@ export function TableRow({ project, index }: TableRowProps) {
       </td>
       <td className="px-4 py-3 min-w-[100px]">
         <RiskBar score={project.riskScore} />
+      </td>
+      <td className="px-4 py-3">
+        <div className="relative group inline-block">
+          <span className={clsx('text-xs font-semibold px-2 py-0.5 rounded-full cursor-default', predLevelStyles[predictiveRisk.level])}>
+            {predictiveRisk.level}
+          </span>
+          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-20 hidden group-hover:block w-52 bg-slate-900 text-white text-xs rounded-lg p-3 shadow-xl pointer-events-none">
+            <p className="font-semibold mb-1.5">Score: {predictiveRisk.score}/10</p>
+            <ul className="space-y-0.5">
+              {predictiveRisk.reasons.map(r => (
+                <li key={r} className="text-slate-300">• {r}</li>
+              ))}
+            </ul>
+            <div className="absolute top-full left-1/2 -translate-x-1/2 -mt-px border-4 border-transparent border-t-slate-900" />
+          </div>
+        </div>
       </td>
     </tr>
   );

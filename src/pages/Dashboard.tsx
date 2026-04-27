@@ -3,6 +3,7 @@ import { CostTrendChart } from '../components/charts/CostTrendChart';
 import { StatusPieChart } from '../components/charts/StatusPieChart';
 import { AlertPanel } from '../components/alerts/AlertPanel';
 import { InsightPanel } from '../components/insights/InsightPanel';
+import { PredictiveRiskPanel } from '../components/alerts/PredictiveRiskPanel';
 import { useProjects } from '../hooks/useProjects';
 
 type ProjectsData = ReturnType<typeof useProjects>;
@@ -12,12 +13,12 @@ interface DashboardProps {
 }
 
 export function Dashboard({ data }: DashboardProps) {
-  const { projects, kpis, alerts, insights } = data;
+  const { projects, kpis, alerts, insights, predictiveRisks } = data;
 
   return (
     <div className="space-y-6">
       {/* KPI Cards */}
-      <SummaryCardRow kpis={kpis} />
+      <SummaryCardRow kpis={kpis} predictiveRisks={predictiveRisks} />
 
       {/* Charts row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -30,6 +31,9 @@ export function Dashboard({ data }: DashboardProps) {
         <AlertPanel alerts={alerts} />
         <InsightPanel insights={insights} />
       </div>
+
+      {/* Predictive Risk */}
+      <PredictiveRiskPanel projects={projects} predictiveRisks={predictiveRisks} />
     </div>
   );
 }
