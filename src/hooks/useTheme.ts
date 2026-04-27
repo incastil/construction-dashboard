@@ -6,7 +6,7 @@ export function useTheme() {
   const [theme, setTheme] = useState<Theme>(() => {
     const stored = localStorage.getItem('dashboard-theme') as Theme | null;
     if (stored) return stored;
-    return 'dark';
+    return 'light';
   });
 
   useEffect(() => {
